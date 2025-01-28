@@ -10,22 +10,27 @@ import {
 } from 'typeorm';
 import { Categoria } from '../../categoria/entities/categoria.entity';
 import { NumericTransformer } from '../../util/numerictransformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'tb_produtos' })
 export class Produto {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @IsNotEmpty()
   @Column({ length: 100, nullable: false })
   nome: string;
 
+  @ApiProperty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @IsNotEmpty()
   @Column({ length: 255, nullable: false })
   descricao: string;
 
+  @ApiProperty()
   @Transform(({ value }: { value: string }) => parseFloat(value))
   @IsNotEmpty()
   @IsNumber()
@@ -39,6 +44,7 @@ export class Produto {
   })
   preco: number;
 
+  @ApiProperty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @IsNotEmpty()
   @Column({ length: 5000, nullable: true })
@@ -50,6 +56,7 @@ export class Produto {
   @UpdateDateColumn()
   data_atualizacao: Date;
 
+  @ApiProperty({ type: () => Produto })
   @ManyToOne(() => Categoria, (categoria) => categoria.produto, {
     onDelete: 'CASCADE',
   })

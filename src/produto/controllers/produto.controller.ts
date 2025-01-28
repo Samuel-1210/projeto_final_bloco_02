@@ -9,12 +9,14 @@ import {
   ParseIntPipe,
   Post,
   Put,
-
 } from '@nestjs/common';
 import { ProdutoService } from '../services/produto.service';
 import { Produto } from '../entities/produto.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Produto')
 @Controller('/produtos')
+@ApiBearerAuth()
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
