@@ -14,10 +14,12 @@ import {
 import { CategoriaService } from '../services/categoria.service';
 import { Categoria } from '../entities/categoria.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 // import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 @ApiTags('Categoria')
 @Controller('/categorias')
 @ApiBearerAuth()
+
 export class CategoriaController {
   constructor(private readonly categoriaService: CategoriaService) {}
 
@@ -38,7 +40,8 @@ export class CategoriaController {
   findBydescricao(@Param('descricao') descricao: string): Promise<Categoria[]> {
     return this.categoriaService.findByDescricao(descricao);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Post('/cadastrar')
   @HttpCode(HttpStatus.CREATED)
   create(@Body() categoria: Categoria): Promise<Categoria> {

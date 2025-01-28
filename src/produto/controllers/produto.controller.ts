@@ -9,14 +9,17 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProdutoService } from '../services/produto.service';
 import { Produto } from '../entities/produto.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 
 @ApiTags('Produto')
 @Controller('/produtos')
 @ApiBearerAuth()
+
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
@@ -31,7 +34,8 @@ export class ProdutoController {
   findById(@Param('id', ParseIntPipe) id: number): Promise<Produto> {
     return this.produtoService.findById(id);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Post('/cadastrar')
   @HttpCode(HttpStatus.CREATED)
   create(@Body() produto: Produto): Promise<Produto> {

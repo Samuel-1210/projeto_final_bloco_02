@@ -8,6 +8,8 @@ describe('Testes do Modulo Produto (e2e)', () => {
   let categoriaId: any;
   let produtoId: any;
   let app: INestApplication;
+  let token: any;
+  let usuarioId: any;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -30,9 +32,51 @@ describe('Testes do Modulo Produto (e2e)', () => {
   afterAll(async () => {
     await app.close();
   });
-  it('01 - Deve Cadastrar uma nova Categoria', async () => {
+
+  it('01 - Deve Cadastrar um novo Usuário', async () => {
+    const resposta = await request(app.getHttpServer())
+      .post('/usuarios/cadastrar')
+      .set('Authorization', `${token}`)
+      .send({
+        nome: 'adm',
+        usuario: 'adm@adm.com',
+        senha: 'adm12345',
+        foto: 'teste',
+        data_nascimento: '12/10/2006',
+      })
+      .expect(201);
+
+    usuarioId = resposta.body.id;
+  });
+
+  it('02 - Deve Autenticar o Usuário (Login)', async () => {
+    const resposta = await request(app.getHttpServer())
+      .post('/usuarios/logar')
+      .send({
+        usuario: 'adm@adm.com',
+        senha: 'adm12345',
+      })
+      .expect(200);
+
+    token = resposta.body.token;
+  });
+
+  it('03 - Deve Cadastrar uma nova Categoria', async () => {
     const resposta = await request(app.getHttpServer())
       .post('/categorias/cadastrar')
+      .set('Authorization', `${token}`)
+      .send({
+        nome: 'Remedio',
+        descricao: 'descricao remedio',
+      })
+      .expect(201);
+
+    categoriaId = resposta.body.id;
+  });
+  it('04 - Deve Cadastrar uma nova Categoria', async () => {
+    const resposta = await request(app.getHttpServer())
+      .post('/categorias/cadastrar')
+      .set('Authorization', `${token}`)
       .send({
         nome: 'Remedio',
         descricao: 'descricao remedio',
@@ -42,9 +86,10 @@ describe('Testes do Modulo Produto (e2e)', () => {
     categoriaId = resposta.body.id;
   });
 
-  it('02 - Deve Cadastrar Um Novo Produto', async () => {
+  it('05 - Deve Cadastrar Um Novo Produto', async () => {
     const resposta = await request(app.getHttpServer())
       .post('/produtos/cadastrar')
+      .set('Authorization', `${token}`)
       .send({
         nome: 'Cinegrip',
         descricao: 'Para gripe',
@@ -57,20 +102,26 @@ describe('Testes do Modulo Produto (e2e)', () => {
     produtoId = resposta.body.id;
   });
 
-  it('03 - Deve listar Pelo id', async () => {
+  it('06 - Deve listar Pelo id', async () => {
     await request(app.getHttpServer())
       .get(`/produtos/${produtoId}`)
+      .set('Authorization', `${token}`)
       .send({})
       .expect(200);
   });
 
-  it('04 - Deve Listar todos os Produtos', async () => {
-    return request(app.getHttpServer()).get('/produtos/').send({}).expect(200);
+  it('07 - Deve Listar todos os Produtos', async () => {
+    return request(app.getHttpServer())
+      .get('/produtos/')
+      .set('Authorization', `${token}`)
+      .send({})
+      .expect(200);
   });
 
-  it('05 - Deve Atualizar um Usuário', async () => {
+  it('08 - Deve Atualizar um Usuário', async () => {
     return request(app.getHttpServer())
       .put('/produtos/atualizar')
+      .set('Authorization', `${token}`)
       .send({
         id: produtoId,
         nome: 'Cinegrip2',
@@ -87,23 +138,26 @@ describe('Testes do Modulo Produto (e2e)', () => {
       });
   });
 
-  it('06 - Deve Deletar um Produto', async () => {
+  it('09 - Deve Deletar um Produto', async () => {
     return request(app.getHttpServer())
       .delete(`/produtos/deletar/${produtoId}`)
+      .set('Authorization', `${token}`)
       .send({})
       .expect(204);
   });
 
-  it('07 - Deve Exibir por filtro de preço maior', async () => {
+  it('10 - Deve Exibir por filtro de preço maior', async () => {
     return request(app.getHttpServer())
       .get(`/produtos/precoMaior/1`)
+      .set('Authorization', `${token}`)
       .send({})
       .expect(200);
   });
 
-  it('08 - Deve Exibir por filtro de menor', async () => {
+  it('11 - Deve Exibir por filtro de menor', async () => {
     return request(app.getHttpServer())
       .get(`/produtos/precoMenor/1000`)
+      .set('Authorization', `${token}`)
       .send({})
       .expect(200);
   });

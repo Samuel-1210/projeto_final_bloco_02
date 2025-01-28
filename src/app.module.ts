@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriaModule } from './categoria/categoria.module';
 import { ProdutoModule } from './produto/produto.module';
 import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
+import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { AppController } from './app.controller';
     }),
     CategoriaModule,
     ProdutoModule,
+    AuthModule,
+    UsuarioModule,
   ],
   controllers: [AppController],
   providers: [],
