@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Produto } from '../../produto/entities/produto.entity';
 
 @Entity({ name: 'tb_categorias' })
 export class Categoria {
@@ -23,4 +25,7 @@ export class Categoria {
 
   @UpdateDateColumn()
   data_atualizacao: Date;
+
+  @OneToMany(() => Produto, (produto) => produto.categoria)
+  produto: Produto[];
 }
