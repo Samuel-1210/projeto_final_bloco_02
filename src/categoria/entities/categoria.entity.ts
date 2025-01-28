@@ -9,12 +9,15 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Produto } from '../../produto/entities/produto.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'tb_categorias' })
 export class Categoria {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @IsNotEmpty()
   @Column({ length: 100, nullable: false })
@@ -26,6 +29,7 @@ export class Categoria {
   @UpdateDateColumn()
   data_atualizacao: Date;
 
+  @ApiProperty({ type: () => Categoria })
   @OneToMany(() => Produto, (produto) => produto.categoria)
   produto: Produto[];
 }
