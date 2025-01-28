@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-describe('Testes do Modulo Categoria (e2e)', () => {
+describe('Testes do Modulo Produto (e2e)', () => {
   let categoriaId: any;
   let produtoId: any;
   let app: INestApplication;
@@ -107,5 +107,4 @@ describe('Testes do Modulo Categoria (e2e)', () => {
       .send({})
       .expect(200);
   });
-
 });
