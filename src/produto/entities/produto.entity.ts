@@ -21,9 +21,6 @@ export class Produto {
   @Column({ length: 100, nullable: false })
   nome: string;
 
-  @Column({ length: 10, nullable: true })
-  tamanho: string;
-
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @IsNotEmpty()
   @Column({ length: 255, nullable: false })
